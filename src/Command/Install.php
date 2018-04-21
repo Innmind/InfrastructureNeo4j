@@ -34,7 +34,8 @@ final class Install implements Command
             'apt-get update',
             'apt-get install neo4j -y',
             'sed \'-i.bak\' \'s/#dbms.connectors.default_listen_address=localhost/dbms.connectors.default_listen_address=0.0.0.0/g\' \'/etc/neo4j/neo4j.conf\'',
-            'sed \'-i.bak\' \'s/#dbms.connectors.default_advertised_address=localhost/dbms.connectors.default_advertised_address=0.0.0.0/g\' \'/etc/neo4j/neo4j.conf\''
+            'sed \'-i.bak\' \'s/#dbms.connectors.default_advertised_address=localhost/dbms.connectors.default_advertised_address=0.0.0.0/g\' \'/etc/neo4j/neo4j.conf\'',
+            'service neo4j restart'
         );
     }
 

@@ -38,7 +38,7 @@ class InstallTest extends TestCase
             ->method('processes')
             ->willReturn($processes = $this->createMock(Processes::class));
         $processes
-            ->expects($this->exactly(6))
+            ->expects($this->exactly(7))
             ->method('execute')
             ->withConsecutive(
                 ['wget -O - https://debian.neo4j.org/neotechnology.gpg.key | apt-key add -'],
@@ -46,15 +46,16 @@ class InstallTest extends TestCase
                 ['apt-get update'],
                 ['apt-get install neo4j -y'],
                 ['sed \'-i.bak\' \'s/#dbms.connectors.default_listen_address=localhost/dbms.connectors.default_listen_address=0.0.0.0/g\' \'/etc/neo4j/neo4j.conf\''],
-                ['sed \'-i.bak\' \'s/#dbms.connectors.default_advertised_address=localhost/dbms.connectors.default_advertised_address=0.0.0.0/g\' \'/etc/neo4j/neo4j.conf\'']
+                ['sed \'-i.bak\' \'s/#dbms.connectors.default_advertised_address=localhost/dbms.connectors.default_advertised_address=0.0.0.0/g\' \'/etc/neo4j/neo4j.conf\''],
+                ['service neo4j restart']
             )
             ->willReturn($process = $this->createMock(Process::class));
         $process
-            ->expects($this->exactly(6))
+            ->expects($this->exactly(7))
             ->method('wait')
             ->will($this->returnSelf());
         $process
-            ->expects($this->exactly(6))
+            ->expects($this->exactly(7))
             ->method('exitCode')
             ->willReturn(new ExitCode(0));
         $env = $this->createMock(Environment::class);
