@@ -38,5 +38,6 @@
     },
     "scripts": {
         "test": "vendor/bin/phpunit --colors=always"
-    }
+    },
+    "bin": ["infrastructure-neo4j"]
 }
