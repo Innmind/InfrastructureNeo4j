@@ -1,0 +1,43 @@
+{
+    "name": "innmind/infrastructure-neo4j",
+    "type": "library",
+    "description": "Tool to install neo4j",
+    "keywords": ["neo4j"],
+    "homepage": "http://github.com/Innmind/InfrastructureNeo4j",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Baptiste Langlade",
+            "email": "langlade.baptiste@gmail.com"
+        }
+    ],
+    "support": {
+        "issues": "http://github.com/Innmind/InfrastructureNeo4j/issues"
+    },
+    "require": {
+        "php": "~7.2",
+        "innmind/cli": "^1.2",
+        "innmind/server-control": "^2.5",
+        "innmind/immutable": "^2.8",
+        "innmind/http-transport": "^3.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Innmind\\Infrastructure\\Neo4j\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\Innmind\\Infrastructure\\Neo4j\\": "tests/",
+            "Fixture\\Innmind\\Infrastructure\\Neo4j\\": "fixtures/"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~7.0",
+        "giorgiosironi/eris": "^0.10.0"
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit --colors=always"
+    },
+    "bin": ["infrastructure-neo4j"]
+}
