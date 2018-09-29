@@ -25,7 +25,8 @@
     "autoload": {
         "psr-4": {
             "Innmind\\Infrastructure\\Neo4j\\": "src/"
-        }
+        },
+        "files": ["src/bootstrap.php"]
     },
     "autoload-dev": {
         "psr-4": {
