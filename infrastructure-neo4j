@@ -20,23 +20,16 @@ foreach ($paths as $file) {
     }
 }
 
+use function Innmind\Infrastructure\Neo4j\bootstrap;
 use Innmind\CLI\{
     Main,
     Environment,
 };
-use Innmind\Url\Path;
-use Innmind\Compose\ContainerBuilder\ContainerBuilder;
-use Innmind\Immutable\Map;
 
 new class extends Main {
     protected function main(Environment $env): void
     {
-        $container = (new ContainerBuilder)(
-            new Path(__DIR__.'/container.yml'),
-            new Map('string', 'mixed')
-        );
-
-        $run = $container->get('commands');
+        $run = bootstrap();
         $run($env);
     }
 };
