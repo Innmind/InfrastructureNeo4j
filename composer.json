@@ -19,7 +19,7 @@
         "innmind/cli": "^1.2",
         "innmind/server-control": "^2.5",
         "innmind/immutable": "^2.8",
-        "innmind/http-transport": "^3.2",
+        "innmind/http-transport": "^3.3",
         "innmind/event-bus": "^2.3"
     },
     "autoload": {

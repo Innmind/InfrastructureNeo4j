@@ -115,8 +115,8 @@ class SetupUserTest extends TestCase
                 return (string) $request->url() === 'http://localhost:7474/user/neo4j/password' &&
                     (string) $request->method() === 'POST' &&
                     (string) $request->protocolVersion() === '2.0' &&
-                    (string) $request->headers()->get('authorization') === 'Authorization : "Basic" bmVvNGo6bmVvNGo=' &&
-                    (string) $request->headers()->get('content-type') === 'Content-Type : application/json' &&
+                    (string) $request->headers()->get('authorization') === 'Authorization: "Basic" bmVvNGo6bmVvNGo=' &&
+                    (string) $request->headers()->get('content-type') === 'Content-Type: application/json' &&
                     strlen($body['password']) === 40;
             }))
             ->willReturn($response = $this->createMock(Response::class));
@@ -179,8 +179,8 @@ class SetupUserTest extends TestCase
                 return (string) $request->url() === 'http://localhost:7474/user/neo4j/password' &&
                     (string) $request->method() === 'POST' &&
                     (string) $request->protocolVersion() === '2.0' &&
-                    (string) $request->headers()->get('authorization') === 'Authorization : "Basic" bmVvNGo6bmVvNGo=' &&
-                    (string) $request->headers()->get('content-type') === 'Content-Type : application/json' &&
+                    (string) $request->headers()->get('authorization') === 'Authorization: "Basic" bmVvNGo6bmVvNGo=' &&
+                    (string) $request->headers()->get('content-type') === 'Content-Type: application/json' &&
                     strlen($body['password']) === 40;
             }))
             ->willReturn($response = $this->createMock(Response::class));
