@@ -5,18 +5,32 @@ namespace Innmind\Infrastructure\Neo4j;
 
 use function Innmind\HttpTransport\bootstrap as transport;
 use function Innmind\EventBus\bootstrap as eventBus;
+use function Innmind\InstallationMonitor\bootstrap as monitor;
 use Innmind\CLI\Commands;
 use Innmind\Server\Control\ServerFactory;
+use Innmind\Socket\Address\Unix as Address;
 use Innmind\Immutable\{
     Map,
     SetInterface,
+    Set,
 };
 
 function bootstrap(): Commands
 {
+    $clients = monitor()['client'];
+    $client = $clients['silence'](
+        $clients['socket'](
+            new Address('/tmp/installation-monitor')
+        )
+    );
+
     $transport = transport();
     $eventBus = eventBus()['bus'](
-        new Map('string', SetInterface::class)
+        (new Map('string', SetInterface::class))
+            ->put(
+                Event\PasswordWasChanged::class,
+                Set::of('callable', new Listener\InstallationMonitor($client))
+            )
     );
 
     $server = ServerFactory::build();

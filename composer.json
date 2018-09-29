@@ -20,7 +20,8 @@
         "innmind/server-control": "^2.5",
         "innmind/immutable": "^2.8",
         "innmind/http-transport": "^3.3",
-        "innmind/event-bus": "^2.3"
+        "innmind/event-bus": "^2.3",
+        "innmind/installation-monitor": "^1.0"
     },
     "autoload": {
         "psr-4": {
