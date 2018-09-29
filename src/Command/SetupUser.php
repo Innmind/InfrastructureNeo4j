@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Infrastructure\Neo4j\Command;
 
+use Innmind\Infrastructure\Neo4j\Event\PasswordWasChanged;
 use Innmind\CLI\{
     Command,
     Command\Arguments,
@@ -26,17 +27,23 @@ use Innmind\Http\{
 };
 use Innmind\Url\Url;
 use Innmind\Filesystem\Stream\StringStream;
+use Innmind\EventBus\EventBusInterface;
 use Innmind\Immutable\Str;
 
 final class SetupUser implements Command
 {
     private $server;
     private $transport;
+    private $bus;
 
-    public function __construct(Server $server, Transport $transport)
-    {
+    public function __construct(
+        Server $server,
+        Transport $transport,
+        EventBusInterface $bus
+    ) {
         $this->server = $server;
         $this->transport = $transport;
+        $this->bus = $bus;
     }
 
     public function __invoke(Environment $env, Arguments $arguments, Options $options): void
@@ -61,7 +68,7 @@ final class SetupUser implements Command
                         )
                     ),
                     new StringStream(json_encode([
-                        'password' => \sha1(\random_bytes(32)),
+                        'password' => $password = \sha1(\random_bytes(32)),
                     ]))
                 )
             )
@@ -69,7 +76,11 @@ final class SetupUser implements Command
 
         if ($statusCode->value() !== 200) {
             $env->exit(1);
+
+            return;
         }
+
+        $this->bus->dispatch(new PasswordWasChanged('neo4j', $password));
     }
 
     public function __toString(): string
