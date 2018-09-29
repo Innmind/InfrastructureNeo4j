@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Infrastructure\Neo4j\Command;
 
-use Innmind\Infrastructure\Neo4j\Command\SetupUser;
+use Innmind\Infrastructure\Neo4j\{
+    Command\SetupUser,
+    Event\PasswordWasChanged,
+};
 use Innmind\CLI\{
     Command,
     Command\Arguments,
@@ -22,6 +25,7 @@ use Innmind\Http\{
     Message\Response,
     Message\StatusCode\StatusCode,
 };
+use Innmind\EventBus\EventBusInterface;
 use Innmind\Immutable\{
     Map,
     Str,
@@ -36,7 +40,8 @@ class SetupUserTest extends TestCase
             Command::class,
             new SetupUser(
                 $this->createMock(Server::class),
-                $this->createMock(Transport::class)
+                $this->createMock(Transport::class),
+                $this->createMock(EventBusInterface::class)
             )
         );
     }
@@ -45,8 +50,10 @@ class SetupUserTest extends TestCase
     {
         $setup = new SetupUser(
             $server = $this->createMock(Server::class),
-            $transport = $this->createMock(Transport::class)
+            $transport = $this->createMock(Transport::class),
+            $bus = $this->createMock(EventBusInterface::class)
         );
+        $password = null;
         $server
             ->expects($this->exactly(2))
             ->method('processes')
@@ -101,8 +108,9 @@ class SetupUserTest extends TestCase
         $transport
             ->expects($this->once())
             ->method('fulfill')
-            ->with($this->callback(static function($request): bool {
+            ->with($this->callback(static function($request) use (&$password): bool {
                 $body = json_decode((string) $request->body(), true);
+                $password = $body['password'];
 
                 return (string) $request->url() === 'http://localhost:7474/user/neo4j/password' &&
                     (string) $request->method() === 'POST' &&
@@ -116,6 +124,12 @@ class SetupUserTest extends TestCase
             ->expects($this->once())
             ->method('statusCode')
             ->willReturn(new StatusCode(200));
+        $bus
+            ->expects($this->once())
+            ->method('dispatch')
+            ->with($this->callback(static function(PasswordWasChanged $event) use (&$password): bool {
+                return $event->user() === 'neo4j' && $event->password() === $password;
+            }));
 
         $this->assertNull($setup(
             $this->createMock(Environment::class),
@@ -128,7 +142,8 @@ class SetupUserTest extends TestCase
     {
         $setup = new SetupUser(
             $server = $this->createMock(Server::class),
-            $transport = $this->createMock(Transport::class)
+            $transport = $this->createMock(Transport::class),
+            $bus = $this->createMock(EventBusInterface::class)
         );
         $server
             ->expects($this->once())
@@ -178,6 +193,9 @@ class SetupUserTest extends TestCase
             ->expects($this->once())
             ->method('exit')
             ->with(1);
+        $bus
+            ->expects($this->never())
+            ->method('dispatch');
 
         $this->assertNull($setup(
             $env,
@@ -196,7 +214,8 @@ USAGE;
 
         $this->assertSame($expected, (string) new SetupUser(
             $this->createMock(Server::class),
-            $this->createMock(Transport::class)
+            $this->createMock(Transport::class),
+            $this->createMock(EventBusInterface::class)
         ));
     }
 }

@@ -1,5 +1,7 @@
 dependencies:
     transport @innmind/http-transport/container.yml: []
+    eventBus @innmind/event-bus/container.yml:
+        listeners: $listeners
 
 expose:
     commands: $commands
@@ -15,5 +17,8 @@ services:
         setupUser Innmind\Infrastructure\Neo4j\Command\SetupUser:
             - $server
             - $transport.conservative
+            - $eventBus.bus
+
+    listeners map<string, Innmind\Immutable\SetInterface>: []
 
     server Innmind\Server\Control\ServerFactory::build: []
