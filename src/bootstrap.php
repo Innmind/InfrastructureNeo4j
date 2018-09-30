@@ -8,7 +8,6 @@ use function Innmind\EventBus\bootstrap as eventBus;
 use function Innmind\InstallationMonitor\bootstrap as monitor;
 use Innmind\CLI\Commands;
 use Innmind\Server\Control\ServerFactory;
-use Innmind\Socket\Address\Unix as Address;
 use Innmind\Immutable\{
     Map,
     SetInterface,
@@ -19,9 +18,7 @@ function bootstrap(): Commands
 {
     $clients = monitor()['client'];
     $client = $clients['silence'](
-        $clients['socket'](
-            new Address('/tmp/installation-monitor')
-        )
+        $clients['socket']()
     );
 
     $transport = transport();
