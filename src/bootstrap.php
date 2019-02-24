@@ -3,42 +3,37 @@ declare(strict_types = 1);
 
 namespace Innmind\Infrastructure\Neo4j;
 
-use function Innmind\HttpTransport\bootstrap as transport;
 use function Innmind\EventBus\bootstrap as eventBus;
 use function Innmind\InstallationMonitor\bootstrap as monitor;
 use Innmind\CLI\Commands;
-use Innmind\Server\Control\ServerFactory;
+use Innmind\OperatingSystem\OperatingSystem;
 use Innmind\Immutable\{
     Map,
     SetInterface,
     Set,
 };
 
-function bootstrap(): Commands
+function bootstrap(OperatingSystem $os): Commands
 {
-    $clients = monitor()['client'];
+    $clients = monitor($os)['client'];
     $client = $clients['silence'](
-        $clients['socket']()
+        $clients['ipc']()
     );
 
-    $transport = transport();
     $eventBus = eventBus()['bus'](
-        (new Map('string', SetInterface::class))
-            ->put(
+        Map::of('string', 'callable')
+            (
                 Event\PasswordWasChanged::class,
-                Set::of('callable', new Listener\InstallationMonitor($client))
+                new Listener\InstallationMonitor($client)
             )
     );
 
-    $server = ServerFactory::build();
-
     return new Commands(
-        new Command\Install($server),
+        new Command\Install($os->control()),
         new Command\SetupUser(
-            $server,
-            $transport['catch_guzzle_exceptions'](
-                $transport['guzzle']()
-            ),
+            $os->process(),
+            $os->control(),
+            $os->remote()->http(),
             $eventBus
         )
     );
