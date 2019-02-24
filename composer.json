@@ -19,9 +19,9 @@
         "innmind/cli": "^1.2",
         "innmind/server-control": "^2.5",
         "innmind/immutable": "^2.8",
-        "innmind/http-transport": "^3.3",
-        "innmind/event-bus": "^2.3",
-        "innmind/installation-monitor": "^1.1"
+        "innmind/http-transport": "^4.0",
+        "innmind/event-bus": "^3.0",
+        "innmind/installation-monitor": "^2.1"
     },
     "autoload": {
         "psr-4": {

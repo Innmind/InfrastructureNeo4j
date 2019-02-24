@@ -27,31 +27,29 @@ use Innmind\Http\{
 };
 use Innmind\Url\Url;
 use Innmind\Filesystem\Stream\StringStream;
-use Innmind\EventBus\EventBusInterface;
+use Innmind\EventBus\EventBus;
 use Innmind\Immutable\Str;
 
 final class SetupUser implements Command
 {
     private $server;
-    private $transport;
-    private $bus;
+    private $fulfill;
+    private $dispatch;
 
     public function __construct(
         Server $server,
-        Transport $transport,
-        EventBusInterface $bus
+        Transport $fulfill,
+        EventBus $dispatch
     ) {
         $this->server = $server;
-        $this->transport = $transport;
-        $this->bus = $bus;
+        $this->fulfill = $fulfill;
+        $this->dispatch = $dispatch;
     }
 
     public function __invoke(Environment $env, Arguments $arguments, Options $options): void
     {
         $this->waitServerToBeStarted();
-        $statusCode = $this
-            ->transport
-            ->fulfill(
+        $statusCode = ($this->fulfill)(
                 new Request(
                     Url::fromString('http://localhost:7474/user/neo4j/password'),
                     Method::post(),
@@ -80,7 +78,7 @@ final class SetupUser implements Command
             return;
         }
 
-        $this->bus->dispatch(new PasswordWasChanged('neo4j', $password));
+        ($this->dispatch)(new PasswordWasChanged('neo4j', $password));
     }
 
     public function __toString(): string
