@@ -31,6 +31,7 @@ function bootstrap(OperatingSystem $os): Commands
     return new Commands(
         new Command\Install($os->control()),
         new Command\SetupUser(
+            $os->process(),
             $os->control(),
             $os->remote()->http(),
             $eventBus

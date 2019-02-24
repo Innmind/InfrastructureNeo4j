@@ -28,19 +28,24 @@ use Innmind\Http\{
 use Innmind\Url\Url;
 use Innmind\Filesystem\Stream\StringStream;
 use Innmind\EventBus\EventBus;
+use Innmind\OperatingSystem\CurrentProcess;
+use Innmind\TimeContinuum\Period\Earth\Second;
 use Innmind\Immutable\Str;
 
 final class SetupUser implements Command
 {
+    private $process;
     private $server;
     private $fulfill;
     private $dispatch;
 
     public function __construct(
+        CurrentProcess $process,
         Server $server,
         Transport $fulfill,
         EventBus $dispatch
     ) {
+        $this->process = $process;
         $this->server = $server;
         $this->fulfill = $fulfill;
         $this->dispatch = $dispatch;
@@ -93,7 +98,7 @@ USAGE;
     private function waitServerToBeStarted(): void
     {
         do {
-            sleep(1);
+            $this->process->halt(new Second(1));
 
             $started = $this
                 ->server

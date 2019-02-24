@@ -26,6 +26,8 @@ use Innmind\Http\{
     Message\StatusCode\StatusCode,
 };
 use Innmind\EventBus\EventBus;
+use Innmind\OperatingSystem\CurrentProcess;
+use Innmind\TimeContinuum\Period\Earth\Second;
 use Innmind\Immutable\{
     Map,
     Str,
@@ -39,6 +41,7 @@ class SetupUserTest extends TestCase
         $this->assertInstanceOf(
             Command::class,
             new SetupUser(
+                $this->createMock(CurrentProcess::class),
                 $this->createMock(Server::class),
                 $this->createMock(Transport::class),
                 $this->createMock(EventBus::class)
@@ -49,6 +52,7 @@ class SetupUserTest extends TestCase
     public function testInvokation()
     {
         $setup = new SetupUser(
+            $process = $this->createMock(CurrentProcess::class),
             $server = $this->createMock(Server::class),
             $transport = $this->createMock(Transport::class),
             $bus = $this->createMock(EventBus::class)
@@ -130,6 +134,10 @@ class SetupUserTest extends TestCase
             ->with($this->callback(static function(PasswordWasChanged $event) use (&$password): bool {
                 return $event->user() === 'neo4j' && $event->password() === $password;
             }));
+        $process
+            ->expects($this->exactly(2))
+            ->method('halt')
+            ->with(new Second(1));
 
         $this->assertNull($setup(
             $this->createMock(Environment::class),
@@ -141,6 +149,7 @@ class SetupUserTest extends TestCase
     public function testFailsWhenCallToChangePasswordFailed()
     {
         $setup = new SetupUser(
+            $this->createMock(CurrentProcess::class),
             $server = $this->createMock(Server::class),
             $transport = $this->createMock(Transport::class),
             $bus = $this->createMock(EventBus::class)
@@ -213,6 +222,7 @@ This will change the password for the user 'neo4j'
 USAGE;
 
         $this->assertSame($expected, (string) new SetupUser(
+            $this->createMock(CurrentProcess::class),
             $this->createMock(Server::class),
             $this->createMock(Transport::class),
             $this->createMock(EventBus::class)
