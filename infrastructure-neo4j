@@ -3,14 +3,8 @@
 declare(strict_types = 1);
 
 $paths = [
-    'vendor/autoload.php',
-    '../autoload.php',
-    __DIR__ . '/../autoload.php',
-    __DIR__ . '/../../autoload.php',
-    __DIR__ . '/../vendor/autoload.php',
-    __DIR__ . '/../../vendor/autoload.php',
-    getcwd() . '/vendor/autoload.php',
-    getcwd() . '/../vendor/autoload.php',
+    __DIR__.'/vendor/autoload.php',
+    __DIR__ . '/../../../vendor/autoload.php',
 ];
 
 foreach ($paths as $file) {
@@ -26,10 +20,13 @@ use Innmind\CLI\{
     Environment,
 };
 use Innmind\OperatingSystem\OperatingSystem;
+use Innmind\Url\Url;
+use function Innmind\SilentCartographer\bootstrap as cartographer;
 
 new class extends Main {
     protected function main(Environment $env, OperatingSystem $os): void
     {
+        $os = cartographer($os)['cli'](Url::fromString(__DIR__));
         $run = bootstrap($os);
         $run($env);
     }
