@@ -42,5 +42,13 @@
     "scripts": {
         "test": "vendor/bin/phpunit --colors=always"
     },
-    "bin": ["infrastructure-neo4j"]
+    "bin": ["infrastructure-neo4j"],
+    "extra": {
+        "gene": {
+            "expression": [
+                "infrastructure-neo4j install",
+                "infrastructure-neo4j setup-user"
+            ]
+        }
+    }
 }
