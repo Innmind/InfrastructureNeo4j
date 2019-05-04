@@ -21,7 +21,8 @@
         "innmind/immutable": "^2.8",
         "innmind/http-transport": "^4.0",
         "innmind/event-bus": "^3.0",
-        "innmind/installation-monitor": "^2.1"
+        "innmind/installation-monitor": "^2.1",
+        "innmind/silent-cartographer": "^1.1"
     },
     "autoload": {
         "psr-4": {
