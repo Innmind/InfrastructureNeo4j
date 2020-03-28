@@ -5,8 +5,8 @@ namespace Innmind\Infrastructure\Neo4j\Event;
 
 final class PasswordWasChanged
 {
-    private $user;
-    private $password;
+    private string $user;
+    private string $password;
 
     public function __construct(string $user, string $password)
     {

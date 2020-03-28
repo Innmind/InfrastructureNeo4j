@@ -17,27 +17,25 @@ use Innmind\Server\Control\{
 use Innmind\HttpTransport\Transport;
 use Innmind\Http\{
     Message\Request\Request,
-    Message\Method\Method,
-    ProtocolVersion\ProtocolVersion,
-    Headers\Headers,
+    Message\Method,
+    ProtocolVersion,
+    Headers,
     Header\ContentType,
-    Header\ContentTypeValue,
     Header\Authorization,
-    Header\AuthorizationValue,
 };
 use Innmind\Url\Url;
-use Innmind\Filesystem\Stream\StringStream;
+use Innmind\Stream\Readable\Stream;
 use Innmind\EventBus\EventBus;
 use Innmind\OperatingSystem\CurrentProcess;
-use Innmind\TimeContinuum\Period\Earth\Second;
+use Innmind\TimeContinuum\Earth\Period\Second;
 use Innmind\Immutable\Str;
 
 final class SetupUser implements Command
 {
-    private $process;
-    private $server;
-    private $fulfill;
-    private $dispatch;
+    private CurrentProcess $process;
+    private Server $server;
+    private Transport $fulfill;
+    private EventBus $dispatch;
 
     public function __construct(
         CurrentProcess $process,
@@ -54,23 +52,20 @@ final class SetupUser implements Command
     public function __invoke(Environment $env, Arguments $arguments, Options $options): void
     {
         $this->waitServerToBeStarted();
-        $statusCode = ($this->fulfill)(
+        $statusCode = ($this->fulfill)
+            (
                 new Request(
-                    Url::fromString('http://localhost:7474/user/neo4j/password'),
+                    Url::of('http://localhost:7474/user/neo4j/password'),
                     Method::post(),
                     new ProtocolVersion(2, 0),
                     Headers::of(
-                        new ContentType(
-                            new ContentTypeValue('application', 'json')
+                        ContentType::of('application', 'json'),
+                        Authorization::of(
+                            'Basic',
+                            base64_encode('neo4j:neo4j'),
                         ),
-                        new Authorization(
-                            new AuthorizationValue(
-                                'Basic',
-                                base64_encode('neo4j:neo4j')
-                            )
-                        )
                     ),
-                    new StringStream(json_encode([
+                    Stream::ofContent(json_encode([
                         'password' => $password = \sha1(\random_bytes(32)),
                     ]))
                 )
@@ -86,7 +81,7 @@ final class SetupUser implements Command
         ($this->dispatch)(new PasswordWasChanged('neo4j', $password));
     }
 
-    public function __toString(): string
+    public function toString(): string
     {
         return <<<USAGE
 setup-user
@@ -100,15 +95,16 @@ USAGE;
         do {
             $this->process->halt(new Second(1));
 
-            $started = $this
+            $process = $this
                 ->server
                 ->processes()
                 ->execute(
                     ServerCommand::foreground('service')
                         ->withArgument('neo4j')
                         ->withArgument('status')
-                )
-                ->wait()
+                );
+            $process->wait();
+            $started = $process
                 ->output()
                 ->reduce(
                     false,

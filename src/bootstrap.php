@@ -9,7 +9,6 @@ use Innmind\CLI\Commands;
 use Innmind\OperatingSystem\OperatingSystem;
 use Innmind\Immutable\{
     Map,
-    SetInterface,
     Set,
 };
 
@@ -20,6 +19,10 @@ function bootstrap(OperatingSystem $os): Commands
         $clients['ipc']()
     );
 
+    /**
+     * @psalm-suppress InvalidScalarArgument
+     * @psalm-suppress InvalidArgument
+     */
     $eventBus = eventBus()['bus'](
         Map::of('string', 'callable')
             (

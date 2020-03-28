@@ -26,7 +26,7 @@ use function Innmind\SilentCartographer\bootstrap as cartographer;
 new class extends Main {
     protected function main(Environment $env, OperatingSystem $os): void
     {
-        $os = cartographer($os)['cli'](Url::fromString(__DIR__));
+        $os = cartographer($os)['cli'](Url::of(__DIR__));
         $run = bootstrap($os);
         $run($env);
     }
