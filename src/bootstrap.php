@@ -19,6 +19,10 @@ function bootstrap(OperatingSystem $os): Commands
         $clients['ipc']()
     );
 
+    /**
+     * @psalm-suppress InvalidScalarArgument
+     * @psalm-suppress InvalidArgument
+     */
     $eventBus = eventBus()['bus'](
         Map::of('string', 'callable')
             (

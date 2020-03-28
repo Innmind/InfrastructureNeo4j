@@ -21,6 +21,7 @@ final class InstallationMonitor
 
     public function __invoke(PasswordWasChanged $event): void
     {
+        /** @psalm-suppress InvalidArgument */
         $this->client->send(new Event(
             new Event\Name('neo4j.password_changed'),
             Map::of('string', 'scalar|array')
