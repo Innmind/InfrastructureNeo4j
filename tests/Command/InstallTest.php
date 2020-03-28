@@ -41,13 +41,27 @@ class InstallTest extends TestCase
             ->expects($this->exactly(7))
             ->method('execute')
             ->withConsecutive(
-                ['wget -O - https://debian.neo4j.org/neotechnology.gpg.key | apt-key add -'],
-                ['echo \'deb https://debian.neo4j.org/repo stable/\' | tee /etc/apt/sources.list.d/neo4j.list'],
-                ['apt-get update'],
-                ['apt-get install neo4j -y'],
-                ['sed \'-i.bak\' \'s/#dbms.connectors.default_listen_address=0.0.0.0/dbms.connectors.default_listen_address=0.0.0.0/g\' \'/etc/neo4j/neo4j.conf\''],
-                ['sed \'-i.bak\' \'s/#dbms.connectors.default_advertised_address=localhost/dbms.connectors.default_advertised_address=0.0.0.0/g\' \'/etc/neo4j/neo4j.conf\''],
-                ['service neo4j restart']
+                [$this->callback(function($command) {
+                    return $command->toString() === 'wget -O - https://debian.neo4j.org/neotechnology.gpg.key | apt-key add -';
+                })],
+                [$this->callback(function($command) {
+                    return $command->toString() === 'echo \'deb https://debian.neo4j.org/repo stable/\' | tee /etc/apt/sources.list.d/neo4j.list';
+                })],
+                [$this->callback(function($command) {
+                    return $command->toString() === 'apt-get update';
+                })],
+                [$this->callback(function($command) {
+                    return $command->toString() === 'apt-get install neo4j -y';
+                })],
+                [$this->callback(function($command) {
+                    return $command->toString() === 'sed \'-i.bak\' \'s/#dbms.connectors.default_listen_address=0.0.0.0/dbms.connectors.default_listen_address=0.0.0.0/g\' \'/etc/neo4j/neo4j.conf\'';
+                })],
+                [$this->callback(function($command) {
+                    return $command->toString() === 'sed \'-i.bak\' \'s/#dbms.connectors.default_advertised_address=localhost/dbms.connectors.default_advertised_address=0.0.0.0/g\' \'/etc/neo4j/neo4j.conf\'';
+                })],
+                [$this->callback(function($command) {
+                    return $command->toString() === 'service neo4j restart';
+                })],
             )
             ->willReturn($process = $this->createMock(Process::class));
         $process
@@ -84,8 +98,12 @@ class InstallTest extends TestCase
             ->expects($this->exactly(2))
             ->method('execute')
             ->withConsecutive(
-                ['wget -O - https://debian.neo4j.org/neotechnology.gpg.key | apt-key add -'],
-                ['echo \'deb https://debian.neo4j.org/repo stable/\' | tee /etc/apt/sources.list.d/neo4j.list']
+                [$this->callback(function($command) {
+                    return $command->toString() === 'wget -O - https://debian.neo4j.org/neotechnology.gpg.key | apt-key add -';
+                })],
+                [$this->callback(function($command) {
+                    return $command->toString() === 'echo \'deb https://debian.neo4j.org/repo stable/\' | tee /etc/apt/sources.list.d/neo4j.list';
+                })],
             )
             ->willReturn($process = $this->createMock(Process::class));
         $process
@@ -120,6 +138,6 @@ install
 This will install the neo4j server on the machine
 USAGE;
 
-        $this->assertSame($expected, (string) new Install($this->createMock(Server::class)));
+        $this->assertSame($expected, (new Install($this->createMock(Server::class)))->toString());
     }
 }

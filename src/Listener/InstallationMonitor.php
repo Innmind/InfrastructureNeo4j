@@ -23,9 +23,9 @@ final class InstallationMonitor
     {
         $this->client->send(new Event(
             new Event\Name('neo4j.password_changed'),
-            (new Map('string', 'variable'))
-                ->put('user', $event->user())
-                ->put('password', $event->password())
+            Map::of('string', 'scalar|array')
+                ('user', $event->user())
+                ('password', $event->password())
         ));
     }
 }

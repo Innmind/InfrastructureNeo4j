@@ -26,9 +26,9 @@ class InstallationMonitorTest extends TestCase
             ->method('send')
             ->with(new Event(
                 new Event\Name('neo4j.password_changed'),
-                (new Map('string', 'variable'))
-                    ->put('user', 'neo4j')
-                    ->put('password', 'watev')
+                Map::of('string', 'scalar|array')
+                    ('user', 'neo4j')
+                    ('password', 'watev')
             ));
 
         $this->assertNull($dispatch(new PasswordWasChanged('neo4j', 'watev')));

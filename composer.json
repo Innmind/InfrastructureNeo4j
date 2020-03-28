@@ -16,13 +16,12 @@
     },
     "require": {
         "php": "~7.4",
-        "innmind/cli": "^1.2",
-        "innmind/server-control": "^2.5",
-        "innmind/immutable": "^2.8",
-        "innmind/http-transport": "^4.0",
-        "innmind/event-bus": "^3.0",
-        "innmind/installation-monitor": "^2.1",
-        "innmind/silent-cartographer": "^1.1"
+        "innmind/cli": "~2.0",
+        "innmind/operating-system": "~2.0",
+        "innmind/immutable": "~3.5",
+        "innmind/event-bus": "~4.0",
+        "innmind/installation-monitor": "~3.0",
+        "innmind/silent-cartographer": "~2.0"
     },
     "autoload": {
         "psr-4": {

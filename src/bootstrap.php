@@ -9,7 +9,6 @@ use Innmind\CLI\Commands;
 use Innmind\OperatingSystem\OperatingSystem;
 use Innmind\Immutable\{
     Map,
-    SetInterface,
     Set,
 };
 
