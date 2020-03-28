@@ -12,7 +12,7 @@ use Innmind\Immutable\Map;
 
 final class InstallationMonitor
 {
-    private $client;
+    private Client $client;
 
     public function __construct(Client $client)
     {

@@ -34,10 +34,10 @@ use Innmind\Immutable\Str;
 
 final class SetupUser implements Command
 {
-    private $process;
-    private $server;
-    private $fulfill;
-    private $dispatch;
+    private CurrentProcess $process;
+    private Server $server;
+    private Transport $fulfill;
+    private EventBus $dispatch;
 
     public function __construct(
         CurrentProcess $process,

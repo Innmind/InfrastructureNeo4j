@@ -21,8 +21,8 @@ use Innmind\Immutable\{
 
 final class Install implements Command
 {
-    private $server;
-    private $actions;
+    private Server $server;
+    private Stream $actions;
 
     public function __construct(Server $server)
     {

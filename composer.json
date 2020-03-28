@@ -15,7 +15,7 @@
         "issues": "http://github.com/Innmind/InfrastructureNeo4j/issues"
     },
     "require": {
-        "php": "~7.2",
+        "php": "~7.4",
         "innmind/cli": "^1.2",
         "innmind/server-control": "^2.5",
         "innmind/immutable": "^2.8",
