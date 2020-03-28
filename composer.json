@@ -40,9 +40,6 @@
         "phpunit/phpunit": "~7.0",
         "giorgiosironi/eris": "^0.10.0"
     },
-    "scripts": {
-        "test": "vendor/bin/phpunit --colors=always"
-    },
     "bin": ["infrastructure-neo4j"],
     "extra": {
         "gene": {
