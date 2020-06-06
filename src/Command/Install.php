@@ -22,13 +22,13 @@ use Innmind\Immutable\{
 final class Install implements Command
 {
     private Server $server;
+    /** @var Sequence<string> */
     private Sequence $actions;
 
     public function __construct(Server $server)
     {
         $this->server = $server;
-        $this->actions = Sequence::of(
-            'string',
+        $this->actions = Sequence::strings(
             'wget -O - https://debian.neo4j.org/neotechnology.gpg.key | apt-key add -',
             'echo \'deb https://debian.neo4j.org/repo stable/\' | tee /etc/apt/sources.list.d/neo4j.list',
             'apt-get update',
