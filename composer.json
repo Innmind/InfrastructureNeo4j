@@ -21,7 +21,8 @@
         "innmind/immutable": "~3.5",
         "innmind/event-bus": "~4.0",
         "innmind/installation-monitor": "~3.0",
-        "innmind/silent-cartographer": "~2.0"
+        "innmind/silent-cartographer": "~2.0",
+        "innmind/genome": "^3.0"
     },
     "autoload": {
         "psr-4": {
@@ -41,12 +42,7 @@
         "vimeo/psalm": "^3.10"
     },
     "bin": ["infrastructure-neo4j"],
-    "extra": {
-        "gene": {
-            "expression": [
-                "infrastructure-neo4j install",
-                "infrastructure-neo4j setup-user"
-            ]
-        }
+    "provide": {
+        "innmind/genome": "3.0"
     }
 }
