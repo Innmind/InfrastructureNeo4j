@@ -66,9 +66,10 @@ final class SetupUser implements Gene
             $changePassword = new Script(
                 Command::foreground('curl')
                     ->withShortOption('X', 'POST')
+                    ->withArgument('http://localhost:7474/user/neo4j/password')
                     ->withShortOption('H', 'Content-Type: application/json')
                     ->withShortOption('H', 'Authorization: Basic '.\base64_encode('neo4j:neo4j'))
-                    ->withShortOption("{\"password\":\"$password\"}"),
+                    ->withShortOption('d', "{\"password\":\"$password\"}"),
             );
             $changePassword($target);
         } catch (ScriptFailed $e) {
