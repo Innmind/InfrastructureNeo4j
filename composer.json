@@ -15,7 +15,7 @@
         "issues": "http://github.com/Innmind/InfrastructureNeo4j/issues"
     },
     "require": {
-        "php": "~7.4",
+        "php": "~7.4|~8.0",
         "innmind/genome": "^3.0"
     },
     "autoload": {
@@ -30,8 +30,9 @@
         }
     },
     "require-dev": {
-        "phpunit/phpunit": "~8.0",
-        "vimeo/psalm": "^3.10"
+        "phpunit/phpunit": "~9.0",
+        "vimeo/psalm": "~4.4",
+        "innmind/coding-standard": "^1.1"
     },
     "provide": {
         "innmind/genome-genes": "3.0"
